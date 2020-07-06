@@ -15,7 +15,7 @@ var NYEvents;
 
 module.exports = {
   Pull: function pull(x, bot) { //x for the API token, bot is the client object from index.js
-    bot.NYChannel = bot.channels.cache.get(`${config.NYChannel}`); //need to cache the channel to send the message to without any input needed
+    bot.NYChannel = bot.channels.cache.get(`${config.NY.Channel}`); //need to cache the channel to send the message to without any input needed
     console.log('Checking 511NY....');
     fetch(`https://511ny.org/api/getevents?key=${x}&format=json`) //call511ny, use the access token in the argument provided
       .then(function (response) {

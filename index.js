@@ -12,9 +12,9 @@ const client = new discord.Client();
 const config = require('./config.json');
 const sql = require('./Workers/DB.js');
 const { builtinModules } = require('module');
-const toCSV = require('objects-to-csv')
+const toCSV = require('objects-to-csv');
 //----- express server so things can keep running
-const keep_alive = require('./keep_alive.js')
+const keep_alive = require('./keep_alive.js');
 //--Discord login for the bot
 
 client.login(process.env.DiscordToken);
@@ -33,17 +33,17 @@ client.on("message", (message) => {
       message.channel.send("pong!");
     } else if 
     (message.content.startsWith('$sqlcommand')) {
-      let command = message.content.replace("$sqlcommand", "")
-      console.log(command)
-      sql.db.run(command)
+      let command = message.content.replace("$sqlcommand", "");
+      console.log(command);
+      sql.db.run(command);
     } 
-/*    else 
+    else 
     if (message.content.startsWith("!closures")) {
-      let args = message.content.trim().toUpperCase().split((/ +/g))
-      let command = args.shift().toLowerCase()
-      closures.CSV(client, message, args)
-      console.log(args)
-}*/
+      let args = message.content.trim().toUpperCase().split((/ +/g));
+      let command = args.shift().toLowerCase();
+      closures.CSV(client, message, args);
+      console.log(args);
+}
   }
 );
 
@@ -53,7 +53,7 @@ client.on('messageReactionAdd', (reaction, user) => {
   {
       message.channel.send("Thanks for nothing");
   } else 
-  if (emoji == "💩") { message.channel.send('eww')}
+  if (emoji == "💩") { message.channel.send('eww');}
 });
 //Run the update functions every minute
 setInterval(function () {
@@ -61,5 +61,3 @@ setInterval(function () {
     NY.Pull(process.env.NYToken, client);
     //NJ.Pull(client);
 }, 60 * 1000);
-
-  

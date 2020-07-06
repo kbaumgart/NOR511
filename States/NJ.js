@@ -16,7 +16,7 @@ const events_detail = "https://511nj.org/API/client/Map/getEventPopupData?EventI
 
 module.exports = { Pull: 
 function NJpull(bot) {
-    bot.NJChannel = bot.channels.cache.get(`${config.NJChannel}`); //cache the channel so messages can be sent to channel without input needed
+    bot.NJChannel = bot.channels.cache.get(`${config.NJ.Channel}`); //cache the channel so messages can be sent to channel without input needed
     fetch(events_list) //Request the listing of all the events, there's almost no detail in this listing
         .then(function (response) {
             NJEvents = Object.keys(response).length;

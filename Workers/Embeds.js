@@ -1,8 +1,7 @@
 //----- required modules
 const TimeCorrect = require('./TimeCorrect.js');
 const LinkCreator = require('./LinkCreator.js');
-const PAcolor = require('../States/PAcolors.json');
-const PAcounties = require('../States/PAcounties.json');
+const config = require('../config.json');
 
 module.exports = {
     PAClose: function CloseEmbed(d) {
@@ -10,7 +9,7 @@ module.exports = {
             "embed": {
                 "title": `${d.Facility} closed due to ${d.EventType}`,
                 "url": `https://www.511PA.com/Traffic.aspx?${d.FromLat},${d.FromLong},18z`,
-                "color": PAcolor[d.EventType],
+                "color": config.PA.Colors[d.EventType],
                 "timestamp": TimeCorrect.PA(d.CreateTime),
                 "footer": {
                     //fix the image for here
@@ -41,7 +40,7 @@ module.exports = {
                     },
                     {
                         "name": "County",
-                        "value": PAcounties[d.County],
+                        "value": config.PA.Counties[d.County],
                         "inline": true
                     }
 
@@ -85,7 +84,7 @@ module.exports = {
                     },
                     {
                         "name": "County",
-                        "value": PAcounties[d.County],
+                        "value": config.PA.Counties[d.County],
                         "inline": true
                     }
                 ]

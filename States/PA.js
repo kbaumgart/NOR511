@@ -1,6 +1,4 @@
 
-const counties = require('./PAcounties.json');
-const color = require('./PAcolors.json');
 //for if we ever need VEOC const weather = ['flooding', 'winter weather', 'downed utility', 'downed tree', 'debris on roadway', 'downed tree in wires'];
 const closure = ['ramp closure', 'closed'];
 const URL = 'https://www.dot511.state.pa.us/RCRS_Event_Data/api/RCRS/liveEvents';
@@ -15,7 +13,7 @@ const config = require ('../config.json');
 
 module.exports = { 
   Pull: function pull(x, bot) {
-    bot.PAChannel = bot.channels.cache.get(`${config.PAChannel}`);
+    bot.PAChannel = bot.channels.cache.get(`${config.PA.Channel}`);
     fetch(URL, {
             method: 'GET',
             headers: {
@@ -63,7 +61,7 @@ module.exports = {
                            } //if the current status is now closed, send a closure message
                            if (closure.includes(row.LaneStatus) == true) { //if the current status isn't closed, we need to open up that segment
                                bot.PAChannel.send(Embeds.PAOpen(entry));
-                               console.log(`${entry.EventID} ${entry.Facility} in ${entry.IncidentMuniName}, ${counties[entry.County]} remove closure`);
+                               console.log(`${entry.EventID} ${entry.Facility} in ${entry.IncidentMuniName}, ${config.PA.Counties[entry.County]} remove closure`);
                            } //report out to console, will be removed
                            else {
                                console.log(`${entry.EventID} changed to ${entry.LaneStatus} from ${row.LaneStatus}`); 
@@ -85,7 +83,7 @@ module.exports = {
             }
             console.log('PA Update Complete!');})
         .catch(err => console.log(err));
-} }
+} };
 
 
 //pull(process.env.PAToken);

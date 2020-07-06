@@ -1,2 +1,4 @@
 511.db
 .env
+.vscode/
+node_modules/
