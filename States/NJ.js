@@ -21,7 +21,7 @@ module.exports = {
                 return response.json();
             })
             .then(function (data) {
-                UpdateDB(data, bot);
+
                 for (i = 0; i < data.Data.features.length; i++) { //let's looop through the events from the prior call
                     let entry = data.Data.features[i].properties; //how many events are there?
                     sql.db.serialize().get(`SELECT * FROM NJ WHERE ID = "${entry.EventID}"`, function (err, row) { //are any of these events in the database already?
@@ -41,7 +41,7 @@ module.exports = {
                                         //this seems to catch all the events we need to
                                         console.log(`${incident.EventID} added`);
                                         sql.db.serialize().run(`INSERT INTO NJ (ID, RoadwayName, State, Latitude, Longitude, ToLatitude, ToLongitude, Description, LastUpdate, County, Direction, Notes, StartDate, CategoryName, EndDate, MessageID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, returndata.NJ(incident)); //Add the event to the database
-                                        //bot.NJChannel.send(Embeds.NJClose(incident)); //send the closure message to the specified channel in line 19, log the message ID for future features
+                                        bot.NJChannel.send(Embeds.NJClose(incident)); //send the closure message to the specified channel in line 19, log the message ID for future features
                                     }
                                 })
                                 .catch(function (error) {
@@ -51,6 +51,7 @@ module.exports = {
 
                     });
                 }
+                UpdateDB(data, bot);
             }).then(function () {console.log('NJ Update Complete');});
     }
 };
@@ -61,15 +62,15 @@ function UpdateDB(e, bot) {
         let closureindex = 0;
         let closurevalid = false;
         while (closureindex < e.Data.features.length) {
-            if (row.ID == e.Data.features[closureindex].EventID) {
+            if (row.ID == e.Data.features[closureindex].properties.EventID) {
                 closurevalid = true;
             }
             closureindex++;
         }
         if ((!closurevalid) && (row.State == "NJ")) {
             console.log(`remove Event ${row.ID}`);
-            //bot.NJChannel.send(Embeds.NJOpen(row)).then(msg =>
-            sql.db.run(`DELETE FROM NJ WHERE ID = "${row.ID}"`);
+            bot.NJChannel.send(Embeds.NJOpen(row)).then(msg =>
+            sql.db.run(`DELETE FROM NJ WHERE ID = "${row.ID}"`))
 
         }
         if ((!closurevalid) && (row.State != "NJ")) {
