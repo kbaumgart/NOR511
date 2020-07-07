@@ -8,7 +8,7 @@ module.exports = {
         return [ y.ID, y.RoadwayName, y.Latitude, y.Longitude, y.RegionName, y.CountyName, y.DirectionOfTravel, y.Description, y.Location, y.LanesAffected, y.LanesStatus, y.FirstArticleCity, y.SecondCity, y.EventType, y.EventSubType, TimeCorrect.NY(y.LastUpdated), TimeCorrect.NY(y.Reported), TimeCorrect.NY(y.StartDate), TimeCorrect.NY(y.PlannedEndDate), ""];
     },
     NJ:    function returnNJData(x) {
-        return [x.EventID, x.Facility, x.EventState, x.Latitude, x.Longitude, x.ToLatitude, x.ToLongitude, x.FullText, TimeCorrect.NJ(x.LastUpdateDate_String), x.County, x.Direction, x.Notes, (x.StartDateTime), x.CategoryName, x.EndDate_String, ""];
+        return [x.EventID, x.Facility, x.State, x.Latitude, x.Longitude, x.ToLatitude, x.ToLongitude, x.FullText, TimeCorrect.NJ(x.LastUpdateDate_String), x.County, x.Direction, x.Notes, (x.StartDateTime), x.CategoryName, x.EndDate_String, ""];
     },
     DE: function returnData(x) {}
 };

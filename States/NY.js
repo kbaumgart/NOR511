@@ -1,12 +1,12 @@
 /*------511NY parser ---------
-*/
+ */
 //required modules
 const fetch = require('node-fetch');
 const TimeCorrect = require("../Workers/TimeCorrect.js");
 const sql = require("../Workers/DB.js");
 const returndata = require('../Workers/returndata.js');
 const Embeds = require('../Workers/Embeds.js');
-const config = require('../config.json')
+const config = require('../config.json');
 
 //NY Specific Variables
 const NotNY = ['Pennsylvania Statewide', 'New Jersey Statewide', 'Connecticut Statewide'];
@@ -31,14 +31,18 @@ module.exports = {
                 throw err;
               }
               if (!row) { // if the entry is not in the table, add it in
-                sql.db.serialize().run(`INSERT INTO NY (ID, RoadwayName, Latitude, Longitude, RegionName, County, Direction, Description, Location, LanesAffected, LanesStatus, FirstArticleCity, SecondCity, EventType, EventSubType, LastUpdated, Reported, StartDate, PlannedEndDate, MessageID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, returndata.NY(entry));
-                console.log(`${entry.ID} added to database`);
-              if (entry.EventType == 'closures') { //first kind of closure type event
-                bot.NYChannel.send(Embeds.NYClose(entry)).then(msg => {sql.db.run(`UPDATE NY SET MessageID = ${msg.id} WHERE ID = "${entry.ID}"`)});
-              }
-              if (entry.EventType != 'closures' && entry.LanesAffected == 'all lanes' &&entry.LanesStatus == 'closed') { //do not want duplicate sends, want to make sure all lanes in a direction are closed
-              bot.NYChannel.send(Embeds.NYClose(entry)).then(msg => {sql.db.run(`UPDATE NY SET MessageID = ${msg.id} WHERE ID = "${entry.ID}"`)}); //send the message, store the ID for later features
-            }
+                if (entry.EventType == 'closures' || (entry.EventType != 'closures' && entry.LanesAffected == 'all lanes' && (entry.LanesStatus == 'closed' || entry.LanesStatus == "blocked"))) {
+                  sql.db.serialize().run(`INSERT INTO NY (ID, RoadwayName, Latitude, Longitude, RegionName, County, Direction, Description, Location, LanesAffected, LanesStatus, FirstArticleCity, SecondCity, EventType, EventSubType, LastUpdated, Reported, StartDate, PlannedEndDate, MessageID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, returndata.NY(entry));
+                  console.log(`${entry.ID} added to database`);
+                  bot.NYChannel.send(Embeds.NYClose(entry)).then(msg => {
+                    sql.db.run(`UPDATE NY SET MessageID = ${msg.id} WHERE ID = "${entry.ID}"`);
+                  });
+                }
+                if ((row) && (row.LanesStatus != entry.LanesStatus)) {
+                  bot.NYChannel.send(Embeds.NYOpen(sql.db.get(`SELECT * FROM NY WHERE ID = "${row.ID}`))).then(msg => {
+                    sql.db.run(`DELETE FROM NY WHERE ID = "${row.ID}"`);
+                  });
+                }
               }
             });
 
@@ -46,6 +50,9 @@ module.exports = {
           }
         }
         UpdateDB(json, bot); //cleaning the db function
+      })
+      .catch(err => {
+        throw err;
       });
     console.log('Update Complete!');
   }
@@ -56,11 +63,11 @@ process.on('exit', () => sql.close());
 //process.on('SIGTERM', () => process.exit(128 + 15))*/
 
 function UpdateDB(e, bot) {
-  sql.db.each("SELECT ID FROM NY", function (err, row) {
+  sql.db.each("SELECT * FROM NY", function (err, row) {
     if (err) throw err;
     let closureindex = 0;
     let closurevalid = false;
-    while (closureindex < NYEvents) {
+    while (closureindex < e.length) {
       if (row.ID == e[closureindex].ID) {
         closurevalid = true;
       }
@@ -68,10 +75,8 @@ function UpdateDB(e, bot) {
     }
     if (!closurevalid) {
       console.log(`remove Event ${row.ID}`);
-      if (e.EventType == 'closures') {
-      bot.NYChannel.send(Embeds.NYOpen(sql.db.get(`SELECT * FROM NY WHERE ID = "${row.ID}`)));}
-      if (e.EventType != 'closures' && e.LanesAffected == 'all lanes' &&e.LanesStatus == 'closed') {bot.NYChannel.send(Embeds.NYOpen(sql.db.get(`SELECT * FROM NY WHERE ID = "${row.ID}`)))}
-      sql.db.run(`DELETE FROM NY WHERE ID = "${row.ID}"`);
+      bot.NYChannel.send(Embeds.NYOpen(row)).then(msg =>
+        sql.db.run(`DELETE FROM NY WHERE ID = "${row.ID}"`));
 
     }
   });

@@ -96,6 +96,7 @@ module.exports = {
         var closeEmbedhook = {
             "embed": {
                 "title": `${d.RoadwayName} closed due to ${d.EventSubType}`,
+                "color": config.NY.Colors[d.EventSubType],
                 "timestamp": TimeCorrect.NY(d.LastUpdated),
                 "footer": {
                     "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg",
@@ -134,6 +135,7 @@ module.exports = {
         let OpenEmbed = {
             "embed": {
                 "title": `${d.RoadwayName} was closed due to ${d.EventSubType}`,
+                "color": 1505030,
                 "timestamp": TimeCorrect.NY(d.LastUpdated),
                 "footer": {
                     "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg",
@@ -200,5 +202,40 @@ module.exports = {
             }
         };
         return closeEmbedhook;
-    }
+    },
+    NJOpen: function ClosureEmbed(d) { //create the embed used to send via the webhook
+            var closeEmbedhook = {
+                "embed": {
+                    "title": `${d.Facility} reopened after ${d.CategoryName}`,
+                    "color": 1505030,
+                    "timestamp": TimeCorrect.NJ(d.LastUpdateDate_String),
+                    "footer": {
+                        "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg",
+                        "text": `Event ${d.EventID} updated at`
+                    },
+                    "author": {
+                        "name": "511NY DataFeed",
+                        "url": `https://511ny.org/?latitude=${d.Latitude}&longitude=${d.Longitude}&zoom=18`,
+                        "icon_url": ""
+                    },
+                    "fields": [{
+                            "name": "Reason",
+                            "value": d.FullText
+                        },
+                        {
+                            "name": `Links`,
+                            "value": `[WME Link](${LinkCreator.WMELink(d.Latitude, d.Longitude)}) | [LiveMap Link](${LinkCreator.LiveMapLink(d.Latitude, d.Longitude)}) | [App Link](${LinkCreator.AppLink(d.Latitude, d.Longitude)})`
+                        },
+                        {
+                            "name": "County",
+                            "value": d.County,
+                            "inline": true
+                        }
+    
+                    ]
+                }
+            };
+            return closeEmbedhook;
+        }
+    
 };

@@ -1,7 +1,7 @@
 const discord = require('discord.js');
 //--------------------------------------------
 //const DE = require('./States/DE.js');
-//const NJ = require('./States/NJ.js');
+const NJ = require('./States/NJ.js');
 const NY = require('./States/NY.js');
 const PA = require('./States/PA.js');
 // store commands in own folder, figure out good way to require all files within that folder
@@ -24,7 +24,7 @@ client.on("ready", () => {
     console.log("I am ready!");
    PA.Pull(process.env.PAToken, client);
       NY.Pull(process.env.NYToken, client);
-       //NJ.Pull(client);
+       NJ.Pull(client);
   });
  
  //Command handler - more to come in this section
@@ -59,5 +59,5 @@ client.on('messageReactionAdd', (reaction, user) => {
 setInterval(function () {
     PA.Pull(process.env.PAToken, client);
     NY.Pull(process.env.NYToken, client);
-    //NJ.Pull(client);
+    NJ.Pull(client);
 }, 60 * 1000);

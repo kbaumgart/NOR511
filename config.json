@@ -95,7 +95,14 @@
 
     },
     "NY": {
-        "Channel": "723978132754923570"
+        "Channel": "723978132754923570",
+        "Colors": {
+            "special events": 5301186,
+            "incident": 16716288,
+            "construction": 16739072,
+            "2001": 16716288, 
+            "crash investigation": 16716288
+        }
     },
     "NJ": {
         "Channel": "727658662868549652"
