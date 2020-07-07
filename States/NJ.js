@@ -70,7 +70,7 @@ function UpdateDB(e, bot) {
         if ((!closurevalid) && (row.State == "NJ")) {
             console.log(`remove Event ${row.ID}`);
             bot.NJChannel.send(Embeds.NJOpen(row)).then(msg =>
-            sql.db.run(`DELETE FROM NJ WHERE ID = "${row.ID}"`))
+            sql.db.run(`DELETE FROM NJ WHERE ID = "${row.ID}"`));
 
         }
         if ((!closurevalid) && (row.State != "NJ")) {
