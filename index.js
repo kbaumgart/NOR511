@@ -54,6 +54,7 @@ client.on('messageReactionAdd', (reaction, user) => {
   } else 
   if (emoji == "💩") { message.channel.send('eww');}
 });
+
 //Run the update functions every minute
 setInterval(function () {
     PA.Pull(process.env.PAToken, client);

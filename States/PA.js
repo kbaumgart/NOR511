@@ -82,12 +82,6 @@ module.exports = {
 
             }
             console.log('PA Update Complete!');})
-        .catch(err => console.log(err));
+        .catch(console.err(err)
+        );
 } };
-
-
-//pull(process.env.PAToken);
-
-/*setInterval(function () {
-    pull(process.env.PAToken);
-}, 15 * 1000);*/
