@@ -19,7 +19,8 @@
             "disabled vehicle": 16716288,
             "slow vehicle": 16312092,
             "vehicle fire": 16716288,
-            "police department activity": 16716288
+            "police department activity": 16716288,
+            "police activity": 16716288
         },
         "Counties": {
             "0": "Counties",

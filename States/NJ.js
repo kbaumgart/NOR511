@@ -41,7 +41,7 @@ module.exports = {
                                         //this seems to catch all the events we need to
                                         console.log(`${incident.EventID} added`);
                                         sql.db.serialize().run(`INSERT INTO NJ (ID, RoadwayName, State, Latitude, Longitude, ToLatitude, ToLongitude, Description, LastUpdate, County, Direction, Notes, StartDate, CategoryName, EndDate, MessageID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, returndata.NJ(incident)); //Add the event to the database
-                                        bot.NJChannel.send(Embeds.NJClose(incident)).then(msg => sql.db.run(`UPDATE NJ SET MessageID = ${msg.id} WHERE ID = ${incident.EventID}`)); //send the closure message to the specified channel in line 19, log the message ID for future features
+                                        bot.NJChannel.send(Embeds.NJClose(incident)).then(msg => sql.db.run(`UPDATE NJ SET MessageID = ${msg.id} WHERE ID = "${incident.EventID}"`)); //send the closure message to the specified channel in line 19, log the message ID for future features
                                     }
                                 })
                                 .catch(function (error) {

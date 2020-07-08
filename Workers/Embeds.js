@@ -178,6 +178,7 @@ module.exports = {
             "embed": {
                 "title": `${d.Facility} closed due to ${d.CategoryName}`,
                 "timestamp": TimeCorrect.NJ(d.LastUpdateDate_String),
+                "color": config.NJ.Colors[d.CategoryName],
                 "footer": {
                     "icon_url": "https://www.511nj.org/images/logo.png",
                     "text": `Event ${d.EventID} updated at`

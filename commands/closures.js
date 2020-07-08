@@ -19,6 +19,12 @@ module.exports = {
       } else
       if (args[1] == 'NY') {}
     } else
+    if (args[0] == 'NJ') {
+      if (!args[2]) {
+        NJCSV(message);
+      }
+      if (args[2] == 'COUNTY') {}
+    } 
     if (args[0] == 'COUNTY') {
       if (message.channel == config.PA.Channel) {
         PACountyCSV(message, args[1]);
@@ -47,12 +53,52 @@ function PACSV(message) {
 }
 
 function PACountyCSV(message, cty) {
-  sql.db.all(`SELECT EventID, Facility, LaneStatus, Description, EventType, County, IncidentMuniName, FromLat, FromLong, ToLat, ToLong, LastUpdate FROM PA WHERE (LaneStatus = "closed" OR LaneStatus = "ramp closed") AND County = "${cty}"`, function (err, row) {
+  sql.db.all(`SELECT EventID, MessageID, Facility, LaneStatus, Description, EventType, County, IncidentMuniName, FromLat, FromLong, ToLat, ToLong, LastUpdate FROM PA WHERE (LaneStatus = "closed" OR LaneStatus = "ramp closed") AND County = "${cty}"`, function (err, row) {
     if (err) throw err;
+    for (let i = 0; i < row.length; i++) {
+      row[i].FromLink = LinkCreator.WMELink(row[i].FromLat, row[i].FromLong);
+      row[i].ToLink = LinkCreator.WMELink(row[i].ToLat, row[i].ToLong);
+    }
     new toCSV(row).toDisk('./closures.csv')
       .then(csv => message.channel.send(new discord.MessageAttachment('./closures.csv', 'closure.csv')))
       .then(remove => {
         fs.unlinkSync('./closures.csv');
       });
+  });
+}
+
+function NYCSV(message) {
+  sql.db.all('SELECT ID, MessageID, RegionName, County, FirstArticleCity, RoadwayName, Direction, Description, Location, LanesAffected, LanesStatus, LastUpdated, PlannedEndDate, Latitude, Longitude FROM NY', function (err, row) {
+    if (err) throw err;
+    for (let i = 0; i < row.length; i++) {
+      row[i].Link = LinkCreator.WMELink(row[i].Latitude, row[i].Longitude);
+    }
+    new toCSV(row).toDisk('./closures.csv')
+      .then(csv => message.channel.send(new discord.MessageAttachment('./closures.csv', 'closure.csv')))
+      .then(remove => fs.unlinkSync('./closures.csv'));
+  });
+}
+
+function NYCountyCSV(message, cty) {
+  sql.db.all(`SELECT ID, MessageID, RegionName, County, FirstArticleCity, RoadwayName, Direction, Description, Location, LanesAffected, LanesStatus, LastUpdated, PlannedEndDate, Latitude, Longitude FROM NY WHERE County = "${cty}`, function (err, row) {
+    if (err) throw err;
+    for (let i = 0; i < row.length; i++) {
+      row[i].Link = LinkCreator.WMELink(row[i].Latitude, row[i].Longitude);
+    }
+    new toCSV(row).toDisk('./closures.csv')
+      .then(csv => message.channel.send(new discord.MessageAttachment('./closures.csv', 'closure.csv')))
+      .then(remove => fs.unlinkSync('./closures.csv'));
+  });
+}
+
+function NJCSV(message) {
+  sql.db.all(`SELECT ID, MessageID, County, RoadwayName, Description, Direction, CategoryName, LastUpdate, EndDate, Latitude, Longitude`, function (err, row) {
+    if (err) throw err;
+    for (let i = 0; i < row.length; i++) {
+      row[i].Link = LinkCreator.WMELink(row[i].Latitude, row[i].Longitude);
+    }
+    new toCSV(row).toDisk('./closures.csv')
+      .then(csv => message.channel.send(new discord.MessageAttachment('./closures.csv', 'closure.csv')))
+      .then(remove => fs.unlinkSync('./closures.csv'));
   });
 }
