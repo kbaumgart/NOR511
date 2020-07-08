@@ -13,13 +13,13 @@ module.exports = {
                 "timestamp": TimeCorrect.PA(d.CreateTime),
                 "footer": {
                     //fix the image for here
-                    "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg",
+                    "icon_url": "https://www.511pa.com/images/511PA_app_logo.png",
                     "text": `Event ${d.EventID} updated at`
                 },
                 "author": {
                     "name": "511PA DataFeed",
                     "url": `https://www.511PA.com/Traffic.aspx?${d.FromLat},${d.FromLong},18z`,
-                    "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg"
+                    "icon_url": "https://www.511pa.com/images/511PA_app_logo.png"
                 },
                 "fields": [{
                         "name": "Reason",
@@ -53,17 +53,18 @@ module.exports = {
         let openEmbed = {
             "embed": {
                 "title": `${d.Facility} was closed due to ${d.EventType}`,
+                "url": `https://www.511PA.com/Traffic.aspx?${d.FromLat},${d.FromLong},18z`,
                 "color": 1505030,
                 "timestamp": TimeCorrect.PA(d.LastUpdate),
                 "footer": {
                     //fix the URL for the picture
-                    "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg",
+                    "icon_url": "https://www.511pa.com/images/511PA_app_logo.png",
                     "text": `Event ${d.EventID} updated at`
                 },
                 "author": {
                     "name": "511PA DataFeed",
                     "url": `https://www.511PA.com/Traffic.aspx?${d.FromLat},${d.FromLong},18z`,
-                    "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg"
+                    "icon_url": "https://www.511pa.com/images/511PA_app_logo.png"
                 },
                 "fields": [{
                         "name": "Reason",
@@ -97,15 +98,16 @@ module.exports = {
             "embed": {
                 "title": `${d.RoadwayName} closed due to ${d.EventSubType}`,
                 "color": config.NY.Colors[d.EventSubType],
+                "url": `https://511ny.org/?latitude=${d.Latitude}&longitude=${d.Longitude}&zoom=18`,
                 "timestamp": TimeCorrect.NY(d.LastUpdated),
                 "footer": {
-                    "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg",
+                    "icon_url": "https://511ny.org/Content/NY/images/favicon/favicon-192.png",
                     "text": `Event ${d.ID} updated at`
                 },
                 "author": {
                     "name": "511NY DataFeed",
                     "url": `https://511ny.org/?latitude=${d.Latitude}&longitude=${d.Longitude}&zoom=18`,
-                    "icon_url": ""
+                    "icon_url": "https://511ny.org/Content/NY/images/favicon/favicon-192.png"
                 },
                 "fields": [{
                         "name": "Reason",
@@ -135,16 +137,17 @@ module.exports = {
         let OpenEmbed = {
             "embed": {
                 "title": `${d.RoadwayName} was closed due to ${d.EventSubType}`,
+                "url": `https://511ny.org/?latitude=${d.Latitude}&longitude=${d.Longitude}&zoom=18`,
                 "color": 1505030,
-                "timestamp": TimeCorrect.NY(d.LastUpdated),
+                "timestamp": d.LastUpdated,
                 "footer": {
-                    "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg",
+                    "icon_url": "https://511ny.org/Content/NY/images/favicon/favicon-192.png",
                     "text": `Event ${d.ID} updated at`
                 },
                 "author": {
                     "name": "511NY DataFeed",
                     "url": `https://511ny.org/?latitude=${d.Latitude}&longitude=${d.Longitude}&zoom=18`,
-                    "icon_url": ""
+                    "icon_url": "https://511ny.org/Content/NY/images/favicon/favicon-192.png"
                 },
                 "fields": [{
                         "name": "Reason",
@@ -176,13 +179,13 @@ module.exports = {
                 "title": `${d.Facility} closed due to ${d.CategoryName}`,
                 "timestamp": TimeCorrect.NJ(d.LastUpdateDate_String),
                 "footer": {
-                    "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg",
+                    "icon_url": "https://www.511nj.org/images/logo.png",
                     "text": `Event ${d.EventID} updated at`
                 },
                 "author": {
                     "name": "511NY DataFeed",
                     "url": `https://511ny.org/?latitude=${d.Latitude}&longitude=${d.Longitude}&zoom=18`,
-                    "icon_url": ""
+                    "icon_url": "https://www.511nj.org/images/logo.png"
                 },
                 "fields": [{
                         "name": "Reason",
@@ -203,24 +206,24 @@ module.exports = {
         };
         return closeEmbedhook;
     },
-    NJOpen: function ClosureEmbed(d) { //create the embed used to send via the webhook
-            var closeEmbedhook = {
+    NJOpen: function OpenEmbed(d) { //create the embed used to send via the webhook
+            var OpenEmbed = {
                 "embed": {
-                    "title": `${d.Facility} reopened after ${d.CategoryName}`,
+                    "title": `${d.RoadwayName} reopened after ${d.CategoryName}`,
                     "color": 1505030,
-                    "timestamp": TimeCorrect.NJ(d.LastUpdateDate_String),
+                    "timestamp": d.LastUpdate,
                     "footer": {
-                        "icon_url": "https://pbs.twimg.com/profile_images/743481571538243585/WX01GtGM_400x400.jpg",
-                        "text": `Event ${d.EventID} updated at`
+                        "icon_url": "https://www.511nj.org/images/logo.png",
+                        "text": `Event ${d.ID} updated at`
                     },
                     "author": {
                         "name": "511NY DataFeed",
                         "url": `https://511ny.org/?latitude=${d.Latitude}&longitude=${d.Longitude}&zoom=18`,
-                        "icon_url": ""
+                        "icon_url": "https://www.511nj.org/images/logo.png"
                     },
                     "fields": [{
                             "name": "Reason",
-                            "value": d.FullText
+                            "value": d.Description
                         },
                         {
                             "name": `Links`,
@@ -235,7 +238,7 @@ module.exports = {
                     ]
                 }
             };
-            return closeEmbedhook;
+            return OpenEmbed;
         }
     
 };
