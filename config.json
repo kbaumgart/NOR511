@@ -101,11 +101,19 @@
             "incident": 16716288,
             "construction": 16739072,
             "2001": 16716288, 
-            "crash investigation": 16716288
+            "crash investigation": 16716288,
+            "Crash": 16716288,
+            "specialEvents": 5301186,
+            "Demonstration": 5301186
         }
     },
     "NJ": {
-        "Channel": "727658662868549652"
+        "Channel": "727658662868549652",
+        "Colors": {
+            "Construction": 16739072,
+            "Detour": 16716288,
+            "Incident": 16716288
+        }
     },
     "DE": {
         "Channel": ""
