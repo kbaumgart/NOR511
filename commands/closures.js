@@ -17,19 +17,48 @@ module.exports = {
           PACountyCSV(message, args[3]);
         }
       } else
-      if (args[1] == 'NY') {}
-    } else
-    if (args[0] == 'NJ') {
-      if (!args[2]) {
-        NJCSV(message);
+      if (args[1] == 'NY') {
+        if (!args[2]) {
+          NYCSV(message);
+        } else 
+        if (args[2] == 'COUNTY') {
+          if (args[3] == 'NEW') {
+            let cty = `${casefix(args[3])} ${casefix(args[4])}`;
+            NYCountyCSV(message, cty);
+          }
+          else {
+            NYCountyCSV(message,casefix(args[3]));
+          }
+
+        }
+      } else
+      if (args[1] == 'NJ') {
+        if (!args[2]) {
+          NJCSV(message);
+        }
+        if (args[2] == 'COUNTY') {
+          NJCountyCSV(message, casefix(args[3]));
+        }
       }
-      if (args[2] == 'COUNTY') {}
-    } 
+    } else
     if (args[0] == 'COUNTY') {
       if (message.channel == config.PA.Channel) {
         PACountyCSV(message, args[1]);
+      } else
+      if (message.channel == config.NY.Channel) {
+        if (args[1] == 'NEW') {
+          let cty = `${casefix(args[1])} ${casefix(args[2])}`;
+          NYCountyCSV(message, cty);
+        }
+        else {
+          NYCountyCSV(message,casefix(args[1]));
+        }
+      } else
+      if (message.channel == config.NJ.Channel) {
+        NJCountyCSV(message, casefix(args[1]));
       }
-    } else {
+    } 
+    else {
       message.channel.send(`Invalid syntax <@${message.author.id}>. Correct methods are !closures State <2 letter state code> (optional) County <County Name> or !closures County <County Name> within the respective closure channel.`);
     }
     console.log('csv created');
@@ -80,7 +109,8 @@ function NYCSV(message) {
 }
 
 function NYCountyCSV(message, cty) {
-  sql.db.all(`SELECT ID, MessageID, RegionName, County, FirstArticleCity, RoadwayName, Direction, Description, Location, LanesAffected, LanesStatus, LastUpdated, PlannedEndDate, Latitude, Longitude FROM NY WHERE County = "${cty}`, function (err, row) {
+  console.log(cty);
+  sql.db.all(`SELECT ID, MessageID, RegionName, County, FirstArticleCity, RoadwayName, Direction, Description, Location, LanesAffected, LanesStatus, LastUpdated, PlannedEndDate, Latitude, Longitude FROM NY WHERE County = "${cty}"`, function (err, row) {
     if (err) throw err;
     for (let i = 0; i < row.length; i++) {
       row[i].Link = LinkCreator.WMELink(row[i].Latitude, row[i].Longitude);
@@ -92,7 +122,7 @@ function NYCountyCSV(message, cty) {
 }
 
 function NJCSV(message) {
-  sql.db.all(`SELECT ID, MessageID, County, RoadwayName, Description, Direction, CategoryName, LastUpdate, EndDate, Latitude, Longitude`, function (err, row) {
+  sql.db.all(`SELECT ID, MessageID, County, RoadwayName, Description, Direction, CategoryName, LastUpdate, EndDate, Latitude, Longitude FROM NJ WHERE State = 'NJ'`, function (err, row) {
     if (err) throw err;
     for (let i = 0; i < row.length; i++) {
       row[i].Link = LinkCreator.WMELink(row[i].Latitude, row[i].Longitude);
@@ -101,4 +131,22 @@ function NJCSV(message) {
       .then(csv => message.channel.send(new discord.MessageAttachment('./closures.csv', 'closure.csv')))
       .then(remove => fs.unlinkSync('./closures.csv'));
   });
+}
+
+function NJCountyCSV(message, cty) {
+  sql.db.all(`SELECT ID, MessageID, County, RoadwayName, Description, Direction, CategoryName, LastUpdate, EndDate, Latitude, Longitude FROM NJ WHERE County = "${cty}" AND State = "NJ"`, function (err, row) {
+    if (err) throw err;
+    for (let i = 0; i < row.length; i++) {
+      row[i].Link = LinkCreator.WMELink(row[i].Latitude, row[i].Longitude);
+    }
+    new toCSV(row).toDisk('./closures.csv')
+      .then(csv => message.channel.send(new discord.MessageAttachment('./closures.csv', 'closure.csv')))
+      .then(remove => fs.unlinkSync('./closures.csv'));
+  });
+}
+
+function casefix(x) {
+  x = x.toLowerCase();
+  x = x.charAt(0).toUpperCase() + x.slice(1);
+  return x;
 }

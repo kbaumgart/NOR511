@@ -139,7 +139,7 @@ module.exports = {
                 "title": `${d.RoadwayName} was closed due to ${d.EventSubType}`,
                 "url": `https://511ny.org/?latitude=${d.Latitude}&longitude=${d.Longitude}&zoom=18`,
                 "color": 1505030,
-                "timestamp": d.LastUpdated,
+                "timestamp": new Date(),
                 "footer": {
                     "icon_url": "https://511ny.org/Content/NY/images/favicon/favicon-192.png",
                     "text": `Event ${d.ID} updated at`
@@ -185,7 +185,7 @@ module.exports = {
                 },
                 "author": {
                     "name": "511NY DataFeed",
-                    "url": `https://511ny.org/?latitude=${d.Latitude}&longitude=${d.Longitude}&zoom=18`,
+                    "url": ``,
                     "icon_url": "https://www.511nj.org/images/logo.png"
                 },
                 "fields": [{
@@ -212,14 +212,14 @@ module.exports = {
                 "embed": {
                     "title": `${d.RoadwayName} reopened after ${d.CategoryName}`,
                     "color": 1505030,
-                    "timestamp": d.LastUpdate,
+                    "timestamp": new Date(),
                     "footer": {
                         "icon_url": "https://www.511nj.org/images/logo.png",
                         "text": `Event ${d.ID} updated at`
                     },
                     "author": {
                         "name": "511NY DataFeed",
-                        "url": `https://511ny.org/?latitude=${d.Latitude}&longitude=${d.Longitude}&zoom=18`,
+                        "url": ``,
                         "icon_url": "https://www.511nj.org/images/logo.png"
                     },
                     "fields": [{

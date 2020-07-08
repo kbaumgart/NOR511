@@ -42,7 +42,6 @@ client.on("message", (message) => {
       let args = message.content.trim().toUpperCase().split((/ +/g));
       let command = args.shift().toLowerCase();
       closures.CSV(client, message, args);
-      console.log(args);
 }
   }
 );
