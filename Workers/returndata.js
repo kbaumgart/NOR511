@@ -10,5 +10,8 @@ module.exports = {
     NJ:    function returnNJData(x) {
         return [x.EventID, x.Facility, x.State, x.Latitude, x.Longitude, x.ToLatitude, x.ToLongitude, x.FullText, TimeCorrect.NJ(x.LastUpdateDate_String), x.County, x.Direction, x.Notes, (x.StartDateTime), x.CategoryName, x.EndDate_String, ""];
     },
-    DE: function returnData(x) {}
+    DE: function returnData(x) {},
+    Closure: function returnData(x) { 
+        return [x.message.id, x.users.cache.lastKey(), x.message.channel.id, x.message.guild.id, new Date()];
+    }
 };
