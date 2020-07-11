@@ -63,7 +63,7 @@ process.on('exit', () => sql.close());
 //process.on('SIGTERM', () => process.exit(128 + 15))*/
 
 function UpdateDB(e, bot) {
-  sql.db.each("SELECT * FROM NY", function (err, row) {
+  sql.db.each("SELECT * FROM NY LEFT JOIN CLOSURE ON NY.MessageID = CLOSURE.MessageID", function (err, row) {
     if (err) throw err;
     let closureindex = 0;
     let closurevalid = false;
@@ -75,6 +75,9 @@ function UpdateDB(e, bot) {
     }
     if (!closurevalid) {
       console.log(`remove Event ${row.ID}`);
+      if (row.UserID) {
+        bot.NYChannel.guild.members.fetch(row.UserID).then(resolve => bot.NYChannel.send(`This was closed by ${resolve.displayName}`));
+      }
       bot.NYChannel.send(Embeds.NYOpen(row)).then(msg =>
         sql.db.run(`DELETE FROM NY WHERE ID = "${row.ID}"`));
 

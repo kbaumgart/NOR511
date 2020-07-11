@@ -20,7 +20,8 @@
             "slow vehicle": 16312092,
             "vehicle fire": 16716288,
             "police department activity": 16716288,
-            "police activity": 16716288
+            "police activity": 16716288,
+            "utility work": 16739072
         },
         "Counties": {
             "0": "Counties",
@@ -120,6 +121,9 @@
         }
     },
     "DE": {
-        "Channel": ""
+        "Channel": "731160890854080562",
+        "Colors": {
+            "Construction": 16739072
+        }
     }
 }
