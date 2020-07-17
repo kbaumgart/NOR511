@@ -68,7 +68,8 @@ module.exports = {
                                 } // if the current status is now closed, send a closure message
                                 if (closure.includes(row.LaneStatus) === true) { // if the current status isn't closed, we need to open up that segment
                                     if (row.UserID) {
-                                        bot.PAChannel.guild.members.fetch(row.UserID).then(resolve => bot.PAChannel.send(`This was closed by ${resolve.displayName}`));
+                                        bot.PAChannel.send(`Event marked closed by <@${row.UserID}>`);
+                                        //bot.PAChannel.guild.members.fetch(row.UserID).then(resolve => bot.PAChannel.send(`This was closed by ${resolve.displayName}`));
                                     }
                                     bot.PAChannel.send(Embeds.PAOpen(entry));
                                     console.log(`${entry.EventID} ${entry.Facility} in ${entry.IncidentMuniName}, ${config.PA.Counties[entry.County]} remove closure`);

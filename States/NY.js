@@ -26,21 +26,21 @@ module.exports = {
         for (let i = 0; i < NYEvents; i++) {
           let entry = json[i];
           if (NotNY.includes(entry.RegionName) == false && entry.EventType != 'transitMode') { //skip anything not NY & transit notices
-            sql.db.get(`SELECT * FROM NY WHERE ID = "${entry.ID}"`, function (err, row) {
+            sql.db.get(`SELECT * FROM NY WHERE EventID = "${entry.ID}"`, function (err, row) {
               if (err) {
                 throw err;
               }
               if (!row) { // if the entry is not in the table, add it in
                 if (entry.EventType == 'closures' || (entry.EventType != 'closures' && entry.LanesAffected == 'all lanes' && (entry.LanesStatus == 'closed' || entry.LanesStatus == "blocked"))) {
-                  sql.db.serialize().run(`INSERT INTO NY (ID, RoadwayName, Latitude, Longitude, RegionName, County, Direction, Description, Location, LanesAffected, LanesStatus, FirstArticleCity, SecondCity, EventType, EventSubType, LastUpdated, Reported, StartDate, PlannedEndDate, MessageID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, returndata.NY(entry));
+                  sql.db.serialize().run(`INSERT INTO NY (EventID, RoadwayName, Latitude, Longitude, RegionName, County, Direction, Description, Location, LanesAffected, LanesStatus, FirstArticleCity, SecondCity, EventType, EventSubType, LastUpdated, Reported, StartDate, PlannedEndDate, MessageID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, returndata.NY(entry));
                   console.log(`${entry.ID} added to database`);
                   bot.NYChannel.send(Embeds.NYClose(entry)).then(msg => {
-                    sql.db.run(`UPDATE NY SET MessageID = ${msg.id} WHERE ID = "${entry.ID}"`);
+                    sql.db.run(`UPDATE NY SET MessageID = ${msg.id} WHERE EventID = "${entry.ID}"`);
                   });
                 }
                 if ((row) && (row.LanesStatus != entry.LanesStatus)) {
-                  bot.NYChannel.send(Embeds.NYOpen(sql.db.get(`SELECT * FROM NY WHERE ID = "${row.ID}`))).then(msg => {
-                    sql.db.run(`DELETE FROM NY WHERE ID = "${row.ID}"`);
+                  bot.NYChannel.send(Embeds.NYOpen(sql.db.get(`SELECT * FROM NY WHERE EventID = "${row.ID}`))).then(msg => {
+                    sql.db.run(`DELETE FROM NY WHERE EventID = "${row.ID}"`);
                   });
                 }
               }
@@ -68,18 +68,15 @@ function UpdateDB(e, bot) {
     let closureindex = 0;
     let closurevalid = false;
     while (closureindex < e.length) {
-      if (row.ID == e[closureindex].ID) {
+      if (row.EventID == e[closureindex].ID) {
         closurevalid = true;
       }
       closureindex++;
     }
     if (!closurevalid) {
-      console.log(`remove Event ${row.ID}`);
-      if (row.UserID) {
-        bot.NYChannel.guild.members.fetch(row.UserID).then(resolve => bot.NYChannel.send(`This was closed by ${resolve.displayName}`));
-      }
+      console.log(`remove Event ${row.EventID}`);
       bot.NYChannel.send(Embeds.NYOpen(row)).then(msg =>
-        sql.db.run(`DELETE FROM NY WHERE ID = "${row.ID}"`));
+        sql.db.run(`DELETE FROM NY WHERE EventID = "${row.EventID}"`));
 
     }
   });

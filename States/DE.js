@@ -58,9 +58,6 @@ module.exports = {
 				i++;
 			}
 			if (!advisoryValid) {
-				if (row.UserID) {
-					bot.DEChannel.guild.members.fetch(row.UserID).then(resolve => bot.DEChannel.send(`This was closed by ${resolve.displayName}`))
-				}
 				bot.DEChannel.send(Embeds.DEAdvisoryOpen(row));
 				sql.db.run(`DELETE FROM DE WHERE EventID="${row.EventID}"`);
 				console.log(new Date().toLocaleString() + " " + row.EventID + " Deleted!");

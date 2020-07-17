@@ -17,7 +17,7 @@ module.exports = {
     ScheduleDE: function returnData(y) { //format a comma seperated return for insertion into the sql database of relevent datapoints
         return [y.strId, y.construction, y.startDate, y.EventType, y.releaseId, "", y.latitude, y.longitude, y.title, y.county];
     },
-    Closure: function returnData(x) {
-        return [x.message.id, x.users.cache.lastKey(), x.message.channel.id, x.message.guild.id, new Date()];
+    Closure: function returnData(x, y) {
+        return [x.message.id, x.users.cache.lastKey(), x.message.channel.id, x.message.guild.id, new Date(), y];
     }
 };

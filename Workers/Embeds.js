@@ -142,7 +142,7 @@ module.exports = {
                 "timestamp": new Date(),
                 "footer": {
                     "icon_url": "https://511ny.org/Content/NY/images/favicon/favicon-192.png",
-                    "text": `Event ${d.ID} updated at`
+                    "text": `Event ${d.EventID} updated at`
                 },
                 "author": {
                     "name": "511NY DataFeed",
@@ -171,6 +171,7 @@ module.exports = {
                 ]
             }
         };
+        if ((d.UserID) && (d.OpenFlag == 1)) { OpenEmbed.content = `Event marked closed by <@${d.UserID}>`; }
         return OpenEmbed;
     },
     NJClose: function ClosureEmbed(d) { //create the embed used to send via the webhook
@@ -215,7 +216,7 @@ module.exports = {
                     "timestamp": new Date(),
                     "footer": {
                         "icon_url": "https://www.511nj.org/images/logo.png",
-                        "text": `Event ${d.ID} updated at`
+                        "text": `Event ${d.EventID} updated at`
                     },
                     "author": {
                         "name": "511NY DataFeed",
@@ -239,6 +240,8 @@ module.exports = {
                     ]
                 }
             };
+            if ((d.UserID) && (d.OpenFlag == 1))  { 
+                OpenEmbed.content = `Event marked closed by <@${d.UserID}>`;}
             return OpenEmbed;
         },
         DEAdvisoryClose: function CloseEmbed(d) {
@@ -329,6 +332,7 @@ module.exports = {
                       },
                   }
               };
+              if ((d.UserID) && (d.OpenFlag == 1))  { openembed.content = `Event marked closed by <@${d.UserID}>`; }
               return openembed;
           },
           DEScheduleClose: function CloseEmbed(d) {
@@ -409,6 +413,7 @@ module.exports = {
                       },
                   }
               };
+              if ((d.UserID) && (d.OpenFlag == 1))  { openembed.content = `Event marked closed by <@${d.UserID}>`; }
               return openembed;
           }
     
