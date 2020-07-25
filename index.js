@@ -15,8 +15,6 @@ const sql = require('./Workers/DB.js');
 const {
   builtinModules
 } = require('module');
-// ----- express server so things can keep running
-const keep_alive = require('./keep_alive.js');
 // --Discord login for the bot
 
 client.login(process.env.DiscordToken);
@@ -58,7 +56,6 @@ client.on('message', (message) => {
   if (message.content.startsWith('!close')) {
     let args = message.content.trim().toUpperCase().split((/ +/g));
     const command = args.shift().toLowerCase();
-    console.log(command);
     console.log(args);
     sql.db.get(`SELECT * FROM ${args[0]} WHERE EventID = "${args[1]}"`, (err, row) => {
       if (err) throw err;
