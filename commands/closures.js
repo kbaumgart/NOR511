@@ -28,12 +28,11 @@ module.exports = {
           if (args[3] == 'NEW') {
             let cty = `${casefix(args[3])} ${casefix(args[4])}`;
             NYCountyCSV(message, cty);
-          } else 
+          } else
           if (args[3] == "SAINT" || args[3] == "ST." || args[3] == "ST") {
             let cty = `St. ${casefix(args[4])}`;
             NYCountyCSV(message, cty);
-          }
-          else {
+          } else {
             NYCountyCSV(message, casefix(args[3]));
           }
 
@@ -56,12 +55,11 @@ module.exports = {
         if (args[1] == 'NEW') {
           let cty = `${casefix(args[1])} ${casefix(args[2])}`;
           NYCountyCSV(message, cty);
-        } else 
-        if (args[1] == "SAINT" || args[1] == "ST." || args[1] == "ST") { 
+        } else
+        if (args[1] == "SAINT" || args[1] == "ST." || args[1] == "ST") {
           let cty = `St. ${casefix(args[2])}`;
           NYCountyCSV(message, cty);
-        }
-         else {
+        } else {
           NYCountyCSV(message, casefix(args[1]));
         }
       } else
@@ -92,6 +90,22 @@ function PACSV(message) {
         });
     }
   });
+}
+
+function pendingPACSV(message) {
+  sql.db.all(`SELECT EventID, Facility, LaneStatus, Description, EventType, County, IncidentMuniName, LastUpdate, FromLat, FromLong, ToLat, ToLong FROM PA LEFT JOIN CLOSURES ON PA.MessageID = CLOSURES.MessageID WHERE CLOSURES.MessageID IS NULL AND(LaneStatus = "closed" OR LaneStatus = "ramp closed") `);
+  if (err) throw err;
+  if (row.length == 0) {
+    message.channel.send('No results!');
+  } else {
+    for (let i = 0; i < row.length; i++) {
+      row[i].FromLink = LinkCreator.WMELink(row[i].FromLat, row[i].FromLong);
+      row[i].ToLink = LinkCreator.WMELink(row[i].ToLat, row[i].ToLong);
+    }
+    new toCSV(row).toDisk('./unhandledClosures.csv').then(csv => message.channel.send(new discord.MessageAttachment('./unhandledClosures.csv', 'unhandledClosures.csv'))).then(remove => {
+      fs.unlinkSync('./unhandledClosures.csv');
+    });
+  }
 }
 
 function PACountyCSV(message, cty) {
@@ -148,7 +162,7 @@ function NYCountyCSV(message, cty) {
 }
 
 function NJCSV(message) {
-  sql.db.all(`SELECT ID, MessageID, County, RoadwayName, Description, Direction, CategoryName, LastUpdate, EndDate, Latitude, Longitude FROM NJ WHERE State = 'NJ'`, function (err, row) {
+  sql.db.all(`SELECT EventID, MessageID, County, RoadwayName, Description, Direction, CategoryName, LastUpdate, EndDate, Latitude, Longitude FROM NJ WHERE State = 'NJ'`, function (err, row) {
     if (err) throw err;
     if (row.length == 0) {
       message.channel.send('No Results!');

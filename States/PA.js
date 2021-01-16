@@ -27,9 +27,8 @@ module.exports = {
                 const loop = json.Values.length;
                 for (let i = 0; i < loop; i++) { // run a loop of all responses
                     let entry = json.Values[i];
-                    // first, lets clear the old events that aren't in the response
                     // create expression to add FromLat, FromLong, ToLat, ToLong key value pairs to use in embeds later
-                    if (entry.FromLocLatLong == '') {
+                    if (entry.FromLocLatLong == '') { //ramps are weird, they don't use the From/To fields
                         entry.FromLat = entry.IncidentLocLatLong.split(',')[0];
                         entry.FromLong = entry.IncidentLocLatLong.split(',')[1];
                         entry.ToLat = entry.IncidentLocLatLong.split(',')[0];
@@ -51,6 +50,7 @@ module.exports = {
                                 console.log(`Closure added for ${entry.Facility} because of ${entry.Description}`);
                                 bot.PAChannel.send(Embeds.PAClose(entry)).then(msg => {
                                     sql.db.run(`UPDATE PA SET MessageID = ${msg.id} WHERE EventID = ` + entry.EventID);
+                                    sql.db.run(`INSERT INTO CLOSURE MessageID = ${msg.id}`)
                                 });
                             } else {
                                 console.log(`${entry.EventID} added as ${entry.Description}`);
@@ -62,6 +62,7 @@ module.exports = {
                                     console.log(`Closure added for ${entry.Facility} because of ${entry.Description}`);
                                     bot.PAChannel.send(Embeds.PAClose(entry)).then(msg => {
                                         sql.db.run(`UPDATE PA SET MessageID = ${msg.id} WHERE EventID = ` + entry.EventID);
+                                        sql.db.run(`INSERT INTO CLOSURE MessageID = ${msg.id}`)
                                     }).catch(err => {
                                         throw err;
                                     });
@@ -94,5 +95,36 @@ module.exports = {
                 }
                 console.log('PA Update Complete!');
             });
-    }
+    },
+
 };
+function UpdateDB(x) {
+    fetch(URL, {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Basic ' + x,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(json => {
+    sql.db.each("SELECT * FROM PA LEFT JOIN CLOSURE ON PA.MessageID = CLOSURE.MessageID", function (err, row) {
+      if (err) throw err;
+      let closureindex = 0;
+      let closurevalid = false;
+      while (closureindex < json.Values.length) {
+        if (row.EventID == json.Values[closureindex].EventID) {
+          closurevalid = true;
+        }
+        closureindex++;
+      }
+      if (!closurevalid) {
+        console.log(`remove Event ${row.EventID}`);
+        console.log(`${row.EventID} has been removed`);
+          sql.db.run(`DELETE FROM PA WHERE EventID = "${row.EventID}"`);
+
+  
+      }
+    })});
+  }
+  UpdateDB(process.env.PAToken)

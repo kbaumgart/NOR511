@@ -24,7 +24,7 @@ module.exports = {
 				let entry = advisoryResponse.advisories[i];
 				entry.EventType = "Advisory";
 				if ((entry.where.location.includes("LANE") === false) && (entry.where.location.includes("CLOS") === true) && (entry.where.location.includes("SHOULDER") === false) && (entry.where.location.includes("LN CLOS") === false)) {
-					sql.db.get(`SELECT * FROM DE LEFT JOIN CLOSURE ON DE.MessageID = CLOSURE.MessageID WHERE EventID="${entry.id}"`, function (err,row) {
+					sql.db.get(`SELECT * FROM DE LEFT JOIN CLOSURE ON DE.MessageID = CLOSURE.MessageID WHERE EventID = "${entry.id}"`, function (err,row) {
 					if (err) {
                         console.log(err);
 						throw err;

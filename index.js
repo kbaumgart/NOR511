@@ -32,7 +32,10 @@ client.on('ready', () => {
 client.on('message', (message) => {
   if (message.content.startsWith('ping')) {
     message.channel.send('pong!');
-  } else if ((message.content.startsWith('$reload') && (config.ownerID.includes(message.author.id)))) { 
+  } else if (message.content.startsWith('$mention')) {
+    message.channel.send('hello there <@729443441347526656>')
+  }
+    else if ((message.content.startsWith('$reload') && (config.ownerID.includes(message.author.id)))) { 
     delete require.cache[require.resolve('./commands/closures.js')];
 				delete require.cache[require.resolve('./Workers/Embeds.js')];
 				delete require.cache[require.resolve('./Workers/ReturnData.js')];
@@ -51,7 +54,7 @@ client.on('message', (message) => {
     let args = message.content.trim().toUpperCase().split((/ +/g));
     const command = args.shift().toLowerCase();
     closures.CSV(client, message, args);
-    console.log(command);
+    console.log(command, args);
   } else 
   if (message.content.startsWith('!close')) {
     let args = message.content.trim().toUpperCase().split((/ +/g));
