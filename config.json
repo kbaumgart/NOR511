@@ -1,8 +1,6 @@
 {
     "prefix": "!",
     "ownerID": ["356869234942410753", "211119394992947200"],
-    "closure_emoji": [ "⛔", "🛑", "❌", "🚫", "🚧", "354466322018467852", "355807144597127179", "731614318633680951"],
-    "schedule_eomji": ["📆", ":calendar:", "🆗", "📅"],
     "PA": {
         "Channel": "358106090367483915",
         "Colors": {
@@ -94,8 +92,7 @@
             "65": "WYOMING",
             "66": "YORK",
             "67": "PHILADELPHIA"
-        },
-        "CSVQuery": "SELECT EventID, Facility, LaneStatus, Description, EventType, County, IncidentMuniName, LastUpdate, FromLat, FromLong, ToLat, ToLong FROM"
+        }
 
     },
     "NY": {
