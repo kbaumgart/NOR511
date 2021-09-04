@@ -35,7 +35,7 @@ module.exports = {
                   sql.db.serialize().run(`INSERT INTO NY (EventID, RoadwayName, Latitude, Longitude, RegionName, County, Direction, Description, Location, LanesAffected, LanesStatus, FirstArticleCity, SecondCity, EventType, EventSubType, LastUpdated, Reported, StartDate, PlannedEndDate, MessageID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, returndata.NY(entry));
                   console.log(`${entry.ID} added to database`);
                   bot.NYChannel.send(Embeds.NYClose(entry)).then(msg => {
-                    sql.db.run(`UPDATE NY SET MessageID = ${msg.id} WHERE EventID = "${entry.ID}"`);
+                   // sql.db.run(`UPDATE NY SET MessageID = ${msg.id} WHERE EventID = ` + entry.EventID);
                   });
                 }
                 if ((row) && (row.LanesStatus != entry.LanesStatus)) {
@@ -57,7 +57,6 @@ module.exports = {
     console.log('Update Complete!');
   }
 };
-process.on('exit', () => sql.close());
 /*process.on('SIGHUP', () => process.exit(128 + 1));
 //process.on('SIGINT', () => process.exit(128 + 2));
 //process.on('SIGTERM', () => process.exit(128 + 15))*/

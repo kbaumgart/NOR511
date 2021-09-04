@@ -37,7 +37,7 @@ module.exports = {
                                     if (incident.State != 'NJ') { // if it's not NJ, we do not really need it, but putting in the table saves running the second fetch again
                                         sql.db.serialize().run('INSERT INTO NJ (EventID, RoadwayName, State, Latitude, Longitude, ToLatitude, ToLongitude, Description, LastUpdate, County, Direction, Notes, StartDate, CategoryName, EndDate, MessageID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', returndata.NJ(incident));
                                     } else
-                                    if ((incident.State == 'NJ') && ((incident.FullText.includes('ramp closed') || (incident.FullText.includes('all lanes closed'))))) { // only NJ has to have messages sent
+                                    if ((incident.State == 'NJ') && ((incident.FullText.toLowerCase().includes('ramp closed') || (incident.FullText.toLowerCase().includes('all lanes closed'))))) { // only NJ has to have messages sent
                                         // this seems to catch all the events we need to
                                         console.log(`${incident.EventID} added`);
                                         sql.db.serialize().run('INSERT INTO NJ (EventID, RoadwayName, State, Latitude, Longitude, ToLatitude, ToLongitude, Description, LastUpdate, County, Direction, Notes, StartDate, CategoryName, EndDate, MessageID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', returndata.NJ(incident)); // Add the event to the database

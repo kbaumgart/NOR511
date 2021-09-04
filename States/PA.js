@@ -49,8 +49,8 @@ module.exports = {
                             if (closure.includes(entry.LaneStatus) === true) { // If the lane status of this EventID is closed, send a message to the closure channel, and to the log
                                 console.log(`Closure added for ${entry.Facility} because of ${entry.Description}`);
                                 bot.PAChannel.send(Embeds.PAClose(entry)).then(msg => {
-                                    sql.db.run(`UPDATE PA SET MessageID = ${msg.id} WHERE EventID = ` + entry.EventID);
-                                    sql.db.run(`INSERT INTO CLOSURE MessageID = ${msg.id}`)
+                                    //sql.db.run(`UPDATE PA SET MessageID = ${msg.id} WHERE EventID = ` + entry.EventID);
+                                    //sql.db.run(`INSERT INTO CLOSURE MessageID = ${msg.id}`);
                                 });
                             } else {
                                 console.log(`${entry.EventID} added as ${entry.Description}`);
@@ -61,8 +61,8 @@ module.exports = {
                                 if (closure.includes(entry.LaneStatus) === true) {
                                     console.log(`Closure added for ${entry.Facility} because of ${entry.Description}`);
                                     bot.PAChannel.send(Embeds.PAClose(entry)).then(msg => {
-                                        sql.db.run(`UPDATE PA SET MessageID = ${msg.id} WHERE EventID = ` + entry.EventID);
-                                        sql.db.run(`INSERT INTO CLOSURE MessageID = ${msg.id}`)
+                                        //sql.db.run(`UPDATE PA SET MessageID = ${msg.id} WHERE EventID = ` + entry.EventID);
+                                        //sql.db.run(`INSERT INTO CLOSURE MessageID = ${msg.id}`);
                                     }).catch(err => {
                                         throw err;
                                     });
@@ -125,6 +125,6 @@ function UpdateDB(x) {
 
   
       }
-    })});
+    });});
   }
-  UpdateDB(process.env.PAToken)
+  UpdateDB(process.env.PAToken);
