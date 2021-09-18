@@ -16,3 +16,5 @@ db.run("CREATE TABLE IF NOT EXISTS CLOSURE (MessageID INTEGER, UserID INTEGER, C
 db.run("CREATE TABLE IF NOT EXISTS EVENTS (MessageID INTEGER State TEXT EventID TEXT Roadway TEXT County TEXT Description TEXT EventTimeStamp TEXT)");
 //it is what it says it is, an error log
 db.run("CREATE TABLE IF NOT EXISTS errlog (timestamp TEXT, err TEXT)");
+// for tile status notification
+db.run("CREATE TABLE IF NOT EXISTS tileStatus (timestamp TEXT)");

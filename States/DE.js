@@ -2,7 +2,7 @@
 const fetch = require('node-fetch');
 const sql = require('../Workers/DB.js');
 const config = require('../config.json');
-const returndata = require('../Workers/ReturnData.js');
+const returndata = require('../Workers/returndata.js');
 const Embeds = require('../Workers/Embeds.js');
 
 //DE specific constants & variables
